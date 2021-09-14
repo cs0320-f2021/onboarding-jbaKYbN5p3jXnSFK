@@ -74,6 +74,10 @@ public final class Main {
           subtraction = input.subtract(arguments[0], arguments[1]);
           System.out.println(subtraction);
 
+          FileReader fReader = new FileReader(filename); BufferedReader bReader = new BufferedReader(fReader)) {
+            line = bReader.readLine(); //filename argument
+            while (line != null) {
+
           // TODO: complete your REPL by adding commands for addition "add" and subtraction
           //  "subtract"
         } catch (Exception e) {
