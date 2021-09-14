@@ -68,6 +68,12 @@ public final class Main {
           input = input.trim();
           String[] arguments = input.split(" ");
           System.out.println(arguments[0]);
+
+          addition = input.add(arguments[0], arguments[1]);
+          System.out.println(addition);
+          subtraction = input.subtract(arguments[0], arguments[1]);
+          System.out.println(subtraction);
+
           // TODO: complete your REPL by adding commands for addition "add" and subtraction
           //  "subtract"
         } catch (Exception e) {
