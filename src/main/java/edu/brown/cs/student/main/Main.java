@@ -66,7 +66,17 @@ public final class Main {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-          //System.out.println(arguments[0]);
+          System.out.println(arguments[0]);
+
+          addition = input.add(arguments[0], arguments[1]);
+          System.out.println(addition);
+          subtraction = input.subtract(arguments[0], arguments[1]);
+          System.out.println(subtraction);
+
+          FileReader fReader = new FileReader(filename); BufferedReader bReader = new BufferedReader(fReader)) {
+            line = bReader.readLine(); //filename argument
+            while (line != null) {
+
           // TODO: complete your REPL by adding commands for addition "add" and subtraction
           //  "subtract"
           MathBot math = new MathBot();
