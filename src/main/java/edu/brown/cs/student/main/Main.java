@@ -1,12 +1,9 @@
 package edu.brown.cs.student.main;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -40,6 +37,8 @@ public final class Main {
 
   private String[] args;
 
+  public List<Star> starData = new ArrayList<>(); //create empty arrayList of Stars
+
   private Main(String[] args) {
     this.args = args;
   }
@@ -67,9 +66,67 @@ public final class Main {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-          System.out.println(arguments[0]);
+          //System.out.println(arguments[0]);
           // TODO: complete your REPL by adding commands for addition "add" and subtraction
           //  "subtract"
+          MathBot math = new MathBot();
+          try {
+            if (arguments[0].equals("add")) {
+              double number1 = Double.parseDouble(arguments[1]); //too repetitive?
+              double number2 = Double.parseDouble(arguments[2]);
+              System.out.println(math.add(number1, number2));
+            }
+            else if (arguments[0].equals("subtract")) {
+              double number1 = Double.parseDouble(arguments[1]);
+              double number2 = Double.parseDouble(arguments[2]);
+              System.out.println(math.subtract(number1, number2));
+            }
+            else if (arguments[0].equals("stars")) {
+              try { //catch invalid pathway
+                BufferedReader csvReader = new BufferedReader(new FileReader(arguments[1])); //read in from file
+                BufferedWriter csvWriter = new BufferedWriter(new FileWriter(arguments[1], false));
+                String row; //define row
+                while ((row = csvReader.readLine()) != null) { //read line in while loop
+                  String[] data = row.split(","); //split line into array of data
+                  int index = Integer.parseInt(data[0]);
+                  String name = data[1];
+                  double x = Double.parseDouble(data[2]);
+                  double y = Double.parseDouble(data[3]);
+                  double z = Double.parseDouble(data[4]);
+                  Star newStar = new Star(index, name, x, y, z, 10000); //create new star
+                  starData.add(newStar); //add array to existing array
+                  csvWriter.write(row); //write the row that was just read
+                }
+                csvReader.close();
+                csvWriter.flush(); //write everything stored in bufferedWriter
+                csvWriter.close();
+              }
+            catch (Exception e) {
+              System.out.println("Error: Invalid arguments");
+                }
+            }
+            else if (arguments[0].equals("naive_neighbors")) {
+              if (arguments[1].contains("\"")) { //first character is quotation
+
+              } else {
+                double x = Double.parseDouble(arguments[2]); //string to double, store coordinates
+                double y = Double.parseDouble(arguments[3]);
+                double z = Double.parseDouble(arguments[4]);
+                for (int i = 0; i < starData.size(); i++) { //iterate through the array list made during star command
+                  starData.get(i).distanceGivenCoor(x, y, z); //for each iteration, store their distance from the given coordinates
+                }
+                List<Star> sorted = starData.stream().sorted(Comparator.comparingDouble(Star::getDistance)).collect(Collectors.toList());
+               //create a sorted list
+                System.out.println(sorted.subList(0, Integer.parseInt(arguments[1])));
+                //print out elements 0 through index k
+              }
+            }
+            else {
+              System.out.println("Error: Command not recognized");
+            }
+          } catch (Exception e) {
+            System.out.println("Error: Inputs are not 2 numbers");
+          }
         } catch (Exception e) {
           // e.printStackTrace();
           System.out.println("ERROR: We couldn't process your input");
