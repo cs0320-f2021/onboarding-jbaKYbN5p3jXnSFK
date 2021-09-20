@@ -2,7 +2,6 @@ package edu.brown.cs.student.main;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableMap;
@@ -52,7 +51,7 @@ public final class Main {
 
     // use "--port <n>" to specify what port on which the server runs
     parser.accepts("port").withRequiredArg().ofType(Integer.class)
-        .defaultsTo(DEFAULT_PORT);
+            .defaultsTo(DEFAULT_PORT);
 
     OptionSet options = parser.parse(args);
     if (options.has("gui")) {
@@ -66,17 +65,7 @@ public final class Main {
         try {
           input = input.trim();
           String[] arguments = input.split(" ");
-          System.out.println(arguments[0]);
-
-          addition = input.add(arguments[0], arguments[1]);
-          System.out.println(addition);
-          subtraction = input.subtract(arguments[0], arguments[1]);
-          System.out.println(subtraction);
-
-          FileReader fReader = new FileReader(filename); BufferedReader bReader = new BufferedReader(fReader)) {
-            line = bReader.readLine(); //filename argument
-            while (line != null) {
-
+          //System.out.println(arguments[0]);
           // TODO: complete your REPL by adding commands for addition "add" and subtraction
           //  "subtract"
           MathBot math = new MathBot();
@@ -111,25 +100,31 @@ public final class Main {
                 csvWriter.flush(); //write everything stored in bufferedWriter
                 csvWriter.close();
               }
-            catch (Exception e) {
-              System.out.println("Error: Invalid arguments");
-                }
+              catch (Exception e) {
+                System.out.println("Error: Invalid arguments");
+              }
             }
             else if (arguments[0].equals("naive_neighbors")) {
-              if (arguments[1].contains("\"")) { //first character is quotation
-
+              if (arguments[1].indexOf('"') == 0) { //first character is quotation
+                for(Star starDatum : starData) {
+                  if(arguments[2].equals(starDatum.starName)) {
+                    for(Star starDatum2 : starData) {
+                      starDatum2.distanceGivenCoor(starDatum.xCoor, starDatum.yCoor, starDatum.zCoor);
+                    }
+                  }
+                }
               } else {
                 double x = Double.parseDouble(arguments[2]); //string to double, store coordinates
                 double y = Double.parseDouble(arguments[3]);
                 double z = Double.parseDouble(arguments[4]);
-                for (int i = 0; i < starData.size(); i++) { //iterate through the array list made during star command
-                  starData.get(i).distanceGivenCoor(x, y, z); //for each iteration, store their distance from the given coordinates
-                }
-                List<Star> sorted = starData.stream().sorted(Comparator.comparingDouble(Star::getDistance)).collect(Collectors.toList());
-               //create a sorted list
-                System.out.println(sorted.subList(0, Integer.parseInt(arguments[1])));
-                //print out elements 0 through index k
+                for (Star starDatum : starData) { //iterate through the array list made during star command
+                  starDatum.distanceGivenCoor(x, y, z); //for each iteration, store their distance from the given coordinates
+                }//end for loop because each starDatum is populated
               }
+              //create a sorted list
+              List<Star> sorted = starData.stream().sorted(Comparator.comparingDouble(Star::getDistance)).collect(Collectors.toList());
+              //print out elements 0 through index k
+              System.out.println(sorted.subList(0, Integer.parseInt(arguments[1])));
             }
             else {
               System.out.println("Error: Command not recognized");
@@ -158,7 +153,7 @@ public final class Main {
       config.setDirectoryForTemplateLoading(templates);
     } catch (IOException ioe) {
       System.out.printf("ERROR: Unable use %s for template loading.%n",
-          templates);
+              templates);
       System.exit(1);
     }
     return new FreeMarkerEngine(config);
@@ -212,7 +207,7 @@ public final class Main {
     public ModelAndView handle(Request req, Response res) {
       // this is a map of variables that are used in the FreeMarker template
       Map<String, Object> variables = ImmutableMap.of("title",
-          "Go go GUI");
+              "Go go GUI");
 
       return new ModelAndView(variables, "main.ftl");
     }
